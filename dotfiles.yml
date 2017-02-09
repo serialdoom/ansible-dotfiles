@@ -1,0 +1,48 @@
+---
+# vi: ft=ansible
+  - hosts: all
+    become: false
+
+    roles:
+      - dotfiles
+
+      # - name: install homebrew packages
+        # homebrew:
+          # name: '{{ item }}'
+          # state: present
+        # when: ansible_system == 'Darwin'
+        # with_items:
+          # - ansible
+          # - automake
+          # - bfg
+          # - cctools
+          # - docker
+          # - jq
+          # - readline
+          # - shellcheck
+          # - terraform
+          # - tmux
+          # - vault
+          # - awscli
+          # - binutils
+          # - dos2unix
+          # - ipcalc
+          # - nmap
+          # - openssl
+          # - pcre
+          # - python3
+          # - the_silver_searcher
+          # - tree
+          # - vim
+          # - wget
+          # - bash-completion
+          # - coreutils
+          # - flake8
+          # - git
+          # - grep
+          # - irssi
+          # - libffi
+          # - make
+          # - packer
+          # - unrar
+          # - watch

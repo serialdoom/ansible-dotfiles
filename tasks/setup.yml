@@ -1,0 +1,58 @@
+---
+# tasks file for ./dotfiles
+# vi: ft=ansible
+
+  - name: ensure github.com is a known host
+    lineinfile:
+      dest: ~/.ssh/known_hosts
+      create: yes
+      state: present
+      line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+      regexp: "^github\\.com"
+
+  - name: clone repos
+    git:
+      repo: '{{ item.repo }}'
+      dest: '{{ item.dest }}'
+      version: master
+    with_items:
+      - repo: https://github.com/serialdoom/home.git
+        dest: '{{ dotfiles }}'
+      - repo: https://github.com/gmarik/Vundle.vim.git
+        dest: ~/.vim/bundle/Vundle.vim
+      - repo: git://github.com/joelthelion/autojump.git
+        dest: ~/.autojump.repo
+      - repo: https://github.com/junegunn/fzf.git
+        dest: ~/.fzf
+      - repo: https://github.com/robbyrussell/oh-my-zsh.git
+        dest: ~/.oh-my-zsh
+
+  - name: link files
+    file:
+      src: '{{ dotfiles }}/{{ item }}'
+      dest: '~/{{item }}'
+      state: link
+      force: true
+    with_items:
+      - .bashrc
+      - .bash_profile
+      - .lessfilter
+      - .pdbrc
+      - .pythonrc.py
+      - .tmux.conf
+      - .vimrc
+      - .bash
+      - .zshrc
+      - bin
+
+  - name: install autojump
+    shell: ./install.py
+    args:
+      chdir: ~/.autojump.repo
+      creates: ~/.autojump
+
+  - name: install fzf
+    shell: ./install --key-bindings --completion --update-rc
+    args:
+      chdir: ~/.fzf
+      creates: ~/.fzf.bash

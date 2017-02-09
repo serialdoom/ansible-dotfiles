@@ -1,0 +1,16 @@
+---
+  - name: install git
+    apt:
+      name: '{{ item }}'
+      state: present
+    become: true
+    with_items:
+      - git
+      - zsh
+
+  - name: change shell to zsh
+    user:
+      name: '{{ ohai_current_user }}'
+      shell: /usr/bin/zsh
+      state: present
+    become: true
