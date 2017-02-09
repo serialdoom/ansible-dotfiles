@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+local = ENV.fetch('LOCAL', true)
+
 Vagrant.configure("2") do |config|
     config.vm.define :dotfiles do |dotfiles|
         dotfiles.vm.hostname = "dotfiles"
@@ -13,8 +15,14 @@ Vagrant.configure("2") do |config|
             mkdir -p /etc/ansible/roles
             ansible-galaxy install serialdoom.dotfiles
         SHELL
-		config.vm.provision "ansible_local" do |ansible|
-			ansible.playbook = "/vagrant/dotfiles.yml"
+		if local
+			config.vm.provision "ansible_local" do |ansible|
+				ansible.playbook = "/etc/ansible/roles/serialdoom.dotfiles/dotfiles.yml"
+			end
+		else
+			dotfiles.vm.provision :ansible do |ansible|
+				ansible.playbook = 'dotfiles.yml'
+			end
 		end
     end
 end
